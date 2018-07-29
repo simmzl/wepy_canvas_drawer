@@ -1,7 +1,7 @@
 {
-    "name": "parking-wxapp-ka",
+    "name": "wepy_canvas_drawer",
     "version": "0.0.1",
-    "description": "泊时易商家小程序",
+    "description": "wepy_canvas_drawer",
     "main": "dist/app.js",
     "scripts": {
         "dev": "wepy build --watch",
@@ -12,7 +12,7 @@
         "clean": "rm -rf dist",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
-    "author": "fe@maysatech.com",
+    "author": "me@simmzl.cn",
     "license": "MIT",
     "dependencies": {
         "promise-polyfill": "^7.1.0",
