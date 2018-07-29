@@ -1,0 +1,84 @@
+<template>
+    <view class="app">
+        <image src="{{shareImage}}" class="share-image"></image>
+        <drawer :painting.sync="painting" @getImage.user="eventGetImage"></drawer>
+        <button @tap="eventDraw">绘制</button>
+        <button @tap="eventSave">保存到本地</button>
+    </view>
+</template>
+
+<script>
+import wepy from "wepy";
+import drawer from "@/components/drawer/drawer";
+import DrawerData from "@/components/drawer/drawerdata";
+
+export default class Canvas extends wepy.page {
+    config = {
+        navigationBarTitleText: "生成图片",
+        navigationBarBackgroundColor: "#fff",
+        navigationBarTextStyle: "black"
+    };
+
+    components = {
+        drawer
+    };
+
+    data = {
+        shareImage: "",
+        painting: null
+    };
+
+    computed = {};
+
+    methods = {
+        eventDraw () {
+            wepy.showLoading({
+                title: '绘制分享图片中',
+                mask: true
+            });
+            this.painting = DrawerData;
+            this.$apply();
+            console.log(this.painting);
+        },
+        eventSave () {
+            // 保存图片至本地
+            wepy.saveImageToPhotosAlbum({
+                filePath: this.shareImage,
+                success (res) {
+                    wepy.showToast({
+                        title: '保存图片成功',
+                        icon: 'success',
+                        duration: 2000
+                    })
+                }
+            })
+        },
+        eventGetImage (event) {
+            console.log(event);
+            wepy.hideLoading();
+            const { tempFilePath, errMsg } = event;
+            if (errMsg === 'canvasdrawer:ok') this.shareImage = tempFilePath;
+            console.log("画完了");
+        }
+    };
+    
+    events = {};
+
+    onLoad() {}
+}
+</script>
+<style lang="less">
+    @import "../assets/css/variable.less";
+
+    .share-image {
+        display: block;
+        width: 600rpx;
+        height: 888rpx;
+        margin: 40rpx auto;
+        border: 1px solid black;
+    }
+
+    button {
+        margin-top: 20rpx;
+    }
+</style>

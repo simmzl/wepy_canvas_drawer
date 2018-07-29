@@ -1,0 +1,95 @@
+<template>
+    <view class="app">
+        <view class="menus">
+            <repeat for="{{menus}}" key="index" index="index" item="menu">
+                <view class="menu" @tap="pageSwitch({{menu.url}})" wx:if="{{menu.isShow}}">
+                    {{menu.cn}}
+                </view>
+            </repeat>
+        </view>
+    </view>
+</template>
+
+<script>
+import wepy from "wepy";
+
+export default class Home extends wepy.page {
+    config = {
+        navigationBarTitleText: "DEMOS",
+        navigationBarBackgroundColor: "#fff",
+        navigationBarTextStyle: "black"
+    };
+
+    components = {};
+
+    data = {
+        menus: [
+            {
+                cn: "图片分享",
+                url: "/pages/canvas",
+                isShow: true
+            },
+            {
+                cn: "图片分享",
+                url: "/pages/canvas",
+                isShow: false
+            },
+            {
+                cn: "图片分享",
+                url: "/pages/canvas",
+                isShow: false
+            }
+        ]
+    };
+
+    computed = {};
+
+    methods = {
+        pageSwitch(url) {
+            wepy.navigateTo({ url });
+        }
+    };
+
+    events = {
+    };
+
+    onLoad() {
+    }
+}
+</script>
+<style lang="less">
+    @import "../assets/css/variable.less";
+
+    .app {
+        background: #fff;
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        top: 0;
+    }
+
+    .menus {
+        margin: 0 auto;
+        position: absolute;
+        top: 45%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .menu {
+        display: block;
+        color: #000;
+        background-color: #fff;
+        border: 1px solid #000;
+        height: 100rpx;
+        font-size: 32rpx;
+        line-height: 100rpx;
+        padding-left: 48rpx;
+        padding-right: 48rpx;
+        border-radius: 18rpx;
+        text-decoration: none;
+        margin: 40rpx;
+        // box-shadow: 0 30rpx 60rpx @box-shadow;
+        text-align: center;
+    }
+</style>

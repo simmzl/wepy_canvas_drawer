@@ -1,0 +1,67 @@
+@import "./variable.less";
+
+button {
+    font-size: 32rpx;
+    color: @color-primary;
+    width: 360rpx;
+    height: 70rpx;
+    line-height: 70rpx;
+    background-color: #ffffff;
+    border: 1px solid @color-primary;
+    margin: 34rpx auto;
+    margin-top: 34rpx;
+    &.button-hover {
+        opacity: .8;
+        color: @color-primary;
+        background-color: #ffffff;
+    }
+    &[disabled] {
+        opacity: .4;
+        color: @color-primary !important;
+    }
+}
+
+button[type=primary] {
+    height: 94rpx;
+    width: 670rpx;
+    font-size: 36rpx;
+    background-color: @color-primary;
+    line-height: 94rpx;
+    margin: 60rpx 40rpx;
+    &[loading] {
+        background-color: @color-primary;
+    }
+    &.button-hover {
+        opacity: .8;
+        background-color: @color-primary;
+    }
+    &[disabled] {
+        background-color: @color-primary !important;;
+        color: #ffffff !important;
+    }
+}
+
+textarea {
+    height: 100%;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+.vk-placeholder {
+    color: #B2B2B2;
+    font-size: 26rpx;
+}
+
+.vk-banner {
+    height: 310rpx;
+    padding: 158rpx 0 0 53rpx;
+    box-sizing: border-box;
+    background-repeat: no-repeat;
+    background-size: 75%;
+    background-position: right;
+    .vk-icon.vk-icon-logo {
+        font-size: 85rpx;
+        // color: @color-primary;
+    }
+}

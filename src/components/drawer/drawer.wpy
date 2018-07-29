@@ -1,0 +1,359 @@
+<template>
+    <canvas canvas-id="canvasdrawer"
+        style="width:{{width}}px; height:{{height}}px;"
+        class="board"
+        wx:if="{{showCanvas}}">
+    </canvas>
+</template>
+
+<script>
+    import wepy from "wepy";
+
+    export default class Drawer extends wepy.component {
+
+        props = {
+            painting: {
+                type: Object,
+                default: {}
+            }
+        };
+
+        data = {
+            showCanvas: false,
+
+            width: 100,
+            height: 100,
+
+            index: 0,
+            imageList: [],
+            tempFileList: [],
+
+            isPainting: false,
+            ctx: null,
+            cache: {}
+        };
+
+        watch = {
+            painting(newVal, oldVal) {
+                console.log(newVal, oldVal);
+                if (!this.isPainting) {
+                    if (JSON.stringify(newVal) !== JSON.stringify(oldVal)) {
+                        if (newVal && newVal.width && newVal.height) {
+                            this.showCanvas = true;
+                            this.isPainting = true;
+                            this.$apply();
+                            this.readyPigment();
+                        }
+                    } else {
+                        if (newVal && newVal.mode !== 'same') {
+                            this.$emit('getImage', {
+                                errMsg: 'canvasdrawer:samme params'
+                            })
+                        }
+                    }
+                }
+            }
+        }
+
+        methods = {};
+        readyPigment() {
+            const {
+                width,
+                height,
+                views
+            } = this.painting;
+            this.width = width;
+            this.height = height;
+
+            const inter = setInterval(() => {
+                if (this.ctx) {
+                    console.log("开始inter");
+                    clearInterval(inter);
+                    this.ctx.clearActions();
+                    this.ctx.save();
+                    this.getImageList(views);
+                    this.downLoadImages(0);
+                }
+            }, 100);
+        }
+        getImageList(views) {
+            console.log("遍历json");
+            const imageList = [];
+            for (let i = 0; i < views.length; i++) {
+                if (views[i].type === 'image') {
+                    imageList.push(views[i].url)
+                }
+            }
+            console.log(`imageList:${imageList},长度：${imageList.length}`);
+            this.imageList = imageList;
+        }
+        downLoadImages(index) {
+            const {
+                imageList,
+                tempFileList
+            } = this;
+            if (index < imageList.length) {
+                // console.log(imageList[index])
+                this.getImageInfo(imageList[index]).then(file => {
+                    console.log("获取了一张图片");
+                    tempFileList.push(file);
+                    this.tempFileList = tempFileList;
+                    this.downLoadImages(index + 1)
+                })
+            } else {
+                this.startPainting();
+            }
+        }
+        startPainting() {
+            console.log("开始画了");
+            const {
+                tempFileList,
+                painting: {
+                    views
+                }
+            } = this;
+            for (let i = 0, imageIndex = 0; i < views.length; i++) {
+                if (views[i].type === 'image') {
+                    this.drawImage({
+                        ...views[i],
+                        url: tempFileList[imageIndex]
+                    });
+                    imageIndex++;
+                } else if (views[i].type === 'text') {
+                    if (!this.ctx.measureText) {
+                        wepy.showModal({
+                            title: '提示',
+                            content: '当前微信版本过低，无法使用 measureText 功能，请升级到最新微信版本后重试。'
+                        })
+                        this.$emit('getImage', {
+                            errMsg: 'canvasdrawer:version too low'
+                        });
+                        return;
+                    } else {
+                        this.drawText(views[i]);
+                    }
+                } else if (views[i].type === 'rect') {
+                    this.drawRect(views[i]);
+                }
+            }
+            console.warn("循环完了，保存！");
+            console.log(this.ctx);
+            this.ctx.draw(false, () => {
+                wepy.setStorageSync('canvasdrawer_pic_cache', this.cache);
+                this.saveImageToLocal();
+            });
+        }
+        drawImage(params) {
+            this.ctx.save()
+            const {
+                url,
+                top = 0,
+                left = 0,
+                width = 0,
+                height = 0,
+                borderRadius = 0
+            } = params;
+            // if (borderRadius) {
+            //   this.ctx.beginPath()
+            //   this.ctx.arc(left + borderRadius, top + borderRadius, borderRadius, 0, 2 * Math.PI)
+            //   this.ctx.clip()
+            //   this.ctx.drawImage(url, left, top, width, height)
+            // } else {
+            this.ctx.drawImage(url, left, top, width, height);
+            // }
+            this.ctx.restore();
+            console.log("画了一张图");
+        }
+        drawText(params) {
+            console.log("画文字了");
+            this.ctx.save();
+            const {
+                MaxLineNumber = 2,
+                breakWord = false,
+                color = 'black',
+                content = '',
+                fontSize = 16,
+                top = 0,
+                left = 0,
+                lineHeight = 20,
+                textAlign = 'left',
+                width,
+                bolder = false,
+                textDecoration = 'none'
+            } = params;
+
+            this.ctx.beginPath();
+            this.ctx.setTextBaseline('top');
+            this.ctx.setTextAlign(textAlign);
+            this.ctx.setFillStyle(color);
+            this.ctx.setFontSize(fontSize);
+
+            if (!breakWord) {
+                this.ctx.fillText(content, left, top);
+                this.drawTextLine(left, top, textDecoration, color, fontSize, content);
+            } else {
+                let fillText = '';
+                let fillTop = top;
+                let lineNum = 1;
+                for (let i = 0; i < content.length; i++) {
+                    fillText += [content[i]];
+                    if (this.ctx.measureText(fillText).width > width) {
+                        if (lineNum === MaxLineNumber) {
+                            if (i !== content.length) {
+                                fillText = fillText.substring(0, fillText.length - 1) + '...';
+                                this.ctx.fillText(fillText, left, fillTop);
+                                this.drawTextLine(left, fillTop, textDecoration, color, fontSize, fillText);
+                                fillText = '';
+                                break;
+                            }
+                        }
+                        this.ctx.fillText(fillText, left, fillTop);
+                        this.drawTextLine(left, fillTop, textDecoration, color, fontSize, fillText);
+                        fillText = '';
+                        fillTop += lineHeight;
+                        lineNum++;
+                    }
+                }
+                this.ctx.fillText(fillText, left, fillTop);
+                this.drawTextLine(left, fillTop, textDecoration, color, fontSize, fillText);
+            }
+
+            this.ctx.restore();
+
+            if (bolder) {
+                this.drawText({
+                    ...params,
+                    left: left + 0.3,
+                    top: top + 0.3,
+                    bolder: false,
+                    textDecoration: 'none'
+                });
+            }    
+        }
+        drawTextLine(left, top, textDecoration, color, fontSize, content) {
+            console.log("画线");
+            if (textDecoration === 'underline') {
+                this.drawRect({
+                    background: color,
+                    top: top + fontSize * 1.2,
+                    left: left - 1,
+                    width: this.ctx.measureText(content).width + 3,
+                    height: 1
+                });
+            } else if (textDecoration === 'line-through') {
+                this.drawRect({
+                    background: color,
+                    top: top + fontSize * 0.6,
+                    left: left - 1,
+                    width: this.ctx.measureText(content).width + 3,
+                    height: 1
+                });
+            }
+        }
+        drawRect(params) {
+            console.log("画矩形！");            
+            this.ctx.save();
+            const {
+                background,
+                top = 0,
+                left = 0,
+                width = 0,
+                height = 0
+            } = params;
+            this.ctx.setFillStyle(background);
+            this.ctx.fillRect(left, top, width, height);
+            this.ctx.restore();
+        }
+        async getImageInfo(url) {
+            console.log("获取图片信息");
+            // return new Promise((resolve, reject) => {
+            if (this.cache[url]) {
+                console.error("缓存有了");
+                return this.cache[url];
+            } else {
+                console.log("调用wxapi");
+                const objExp = new RegExp(/^http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/)
+                if (objExp.test(url)) {
+                    console.log("开始调用wxapi");
+                    console.log(url);
+                    const res = await wepy.getImageInfo({
+                        src: url
+                        // complete: res => {
+                        //     console.log(`调用完成：${res}`);
+                        //     if (res.errMsg === 'getImageInfo:ok') {
+                        //         this.cache[url] = res.path;
+                        //         resolve(res.path);
+                        //     } else {
+                        //         this.$emit('getImage', {
+                        //             errMsg: 'canvasdrawer:download fail'
+                        //         })
+                        //         reject(new Error('getImageInfo fail'));
+                        //     }
+                        // }
+                    });
+                    if (res.errMsg === "getImageInfo:ok") {
+                        console.log("获取图片完成了");
+                        this.cache[url] = res.path;
+                        return res.path;
+                    } else {
+                        console.log("获取图片失败了");
+                        this.$emit('getImage', {
+                            errMsg: 'canvasdrawer:download fail'
+                        })
+                        return new Error('getImageInfo fail');
+                    }
+                    console.log(`用await`);
+                    console.log(res);
+                } else {
+                    console.log("不是链接什么意思");
+                    this.cache[url] = url;
+                    resolve(url);
+                }
+            }
+            // })
+        }
+        async saveImageToLocal() {
+            console.log("画完保存临时文件");            
+            const {
+                width,
+                height
+            } = this;
+            const res = await wepy.canvasToTempFilePath({
+                x: 0,
+                y: 0,
+                width,
+                height,
+                canvasId: 'canvasdrawer'
+            }, this);
+            if (res.errMsg === 'canvasToTempFilePath:ok') {
+                this.showCanvas = false;
+                this.isPainting = false;
+                this.imageList = [];
+                this.tempFileList = [];
+                this.$apply();
+                console.log("画完了，该给父组件回调了");
+                this.$emit('getImage', {
+                    tempFilePath: res.tempFilePath,
+                    errMsg: 'canvasdrawer:ok'
+                });
+            } else {
+                console.log("画失败");
+                this.$emit('getImage', {
+                    errMsg: 'canvasdrawer:fail'
+                });
+            }
+        }
+        onLoad() {
+            wepy.removeStorageSync('canvasdrawer_pic_cache');
+            this.cache = wepy.getStorageSync('canvasdrawer_pic_cache') || {};
+            this.ctx = wepy.createCanvasContext('canvasdrawer', this);
+            console.log(this.ctx);
+        }
+    }
+</script>
+<style lang="less">
+    .board {
+        position: fixed;
+        top: 2000rpx;
+    }
+</style>

@@ -1,0 +1,8 @@
+node_modules/
+npm-debug.log
+.stylelintrc
+.wepycache
+.wepyignore
+.idea/
+.DS_Store
+dist
