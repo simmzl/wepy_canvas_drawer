@@ -29,7 +29,7 @@ export default {
       },
       {
         "type": "text",
-        "content": "您的好友陈泽龙",
+        "content": "您的好友【simmzl】",
         "fontSize": 16,
         "color": "#402D16",
         "textAlign": "left",
@@ -39,7 +39,7 @@ export default {
       },
       {
         "type": "text",
-        "content": "发现一件好货，邀请你一起嘿嘿嘿",
+        "content": "https://github.com/simmzl",
         "fontSize": 15,
         "color": "#563D20",
         "textAlign": "left",
@@ -64,7 +64,7 @@ export default {
       },
       {
         "type": "text",
-        "content": "重中之重重中之重重中之重这种重中之重",
+        "content": "正品MAC魅可口红礼盒生日唇膏小辣椒Chili西柚情人",
         "fontSize": 16,
         "lineHeight": 21,
         "color": "#383549",

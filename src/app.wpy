@@ -1,6 +1,4 @@
-<style lang="less" src="@/assets/css/iconfont.less"></style>
 <style lang="less" src="@/assets/css/reset.less"></style>
-<style lang="less" src="@/assets/css/common.less"></style>
 <style lang="less">
     page {
         height:100%
@@ -15,10 +13,7 @@
 <script>
 import wepy from "wepy";
 import "wepy-async-function";
-import config from "@/assets/js/config";
-import Util from "@/assets/js/util.js";
-import Api from "@/assets/js/api.js";
-import Promise from "promise-polyfill";
+// import config from "@/assets/js/config";
 
 export default class extends wepy.app {
     config = {

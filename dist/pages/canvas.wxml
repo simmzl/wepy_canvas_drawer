@@ -1,0 +1,10 @@
+
+    <view class="app">
+        <image src="{{shareImage}}" class="share-image"/>
+        
+    <canvas canvas-id="canvasdrawer" style="width:{{$canvasdrawer$width}}px; height:{{$canvasdrawer$height}}px;" class="board"  wx:if="{{$canvasdrawer$showCanvas}}">
+    </canvas>
+
+        <button bindtap="eventDraw">绘制</button>
+        <button bindtap="eventSave">保存到本地</button>
+    </view>

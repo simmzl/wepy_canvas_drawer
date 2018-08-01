@@ -1,7 +1,7 @@
 <template>
     <view class="app">
         <image src="{{shareImage}}" class="share-image"></image>
-        <drawer :painting.sync="painting" @getImage.user="eventGetImage"></drawer>
+        <canvasdrawer :painting.sync="painting" @getImage.user="eventGetImage"></canvasdrawer>
         <button @tap="eventDraw">绘制</button>
         <button @tap="eventSave">保存到本地</button>
     </view>
@@ -9,8 +9,8 @@
 
 <script>
 import wepy from "wepy";
-import drawer from "@/components/drawer/drawer";
-import DrawerData from "@/components/drawer/drawerdata";
+import canvasdrawer from "@/components/canvasdrawer/canvasdrawer";
+import DrawerData from "@/components/canvasdrawer/drawerdata";
 
 export default class Canvas extends wepy.page {
     config = {
@@ -20,7 +20,7 @@ export default class Canvas extends wepy.page {
     };
 
     components = {
-        drawer
+        canvasdrawer
     };
 
     data = {
@@ -31,37 +31,34 @@ export default class Canvas extends wepy.page {
     computed = {};
 
     methods = {
-        eventDraw () {
+        eventDraw() {
             wepy.showLoading({
-                title: '绘制分享图片中',
+                title: "绘制分享图片中",
                 mask: true
             });
             this.painting = DrawerData;
             this.$apply();
-            console.log(this.painting);
         },
-        eventSave () {
+        async eventSave() {
             // 保存图片至本地
-            wepy.saveImageToPhotosAlbum({
-                filePath: this.shareImage,
-                success (res) {
-                    wepy.showToast({
-                        title: '保存图片成功',
-                        icon: 'success',
-                        duration: 2000
-                    })
-                }
-            })
+            const res = await wepy.saveImageToPhotosAlbum({
+                filePath: this.shareImage
+            });
+            if (res.errMsg === "saveImageToPhotosAlbum:ok") {
+                wepy.showToast({
+                    title: "保存图片成功",
+                    icon: "success",
+                    duration: 2000
+                });
+            }
         },
-        eventGetImage (event) {
-            console.log(event);
+        eventGetImage(event) {
             wepy.hideLoading();
             const { tempFilePath, errMsg } = event;
-            if (errMsg === 'canvasdrawer:ok') this.shareImage = tempFilePath;
-            console.log("画完了");
+            if (errMsg === "canvasdrawer:ok") this.shareImage = tempFilePath;
         }
     };
-    
+
     events = {};
 
     onLoad() {}

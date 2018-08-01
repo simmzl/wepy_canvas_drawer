@@ -28,16 +28,6 @@ export default class Home extends wepy.page {
                 cn: "图片分享",
                 url: "/pages/canvas",
                 isShow: true
-            },
-            {
-                cn: "图片分享",
-                url: "/pages/canvas",
-                isShow: false
-            },
-            {
-                cn: "图片分享",
-                url: "/pages/canvas",
-                isShow: false
             }
         ]
     };

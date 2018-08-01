@@ -71,6 +71,8 @@ module.exports = {
         "no-unused-expressions": ["error", {
             "allowShortCircuit": true
         }],
-        "no-extra-boolean-cast": 0
+        "no-extra-boolean-cast": 0,
+        "spaced-comment": [2, "always"],
+        "no-useless-escape":"off"
     }
 };

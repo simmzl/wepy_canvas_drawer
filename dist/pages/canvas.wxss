@@ -1,0 +1,11 @@
+@import "./../components/canvasdrawer/canvasdrawer.wxss";
+.share-image {
+  display: block;
+  width: 600rpx;
+  height: 888rpx;
+  margin: 40rpx auto;
+  border: 1px solid black;
+}
+button {
+  margin-top: 20rpx;
+}

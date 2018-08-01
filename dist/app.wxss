@@ -1,0 +1,53 @@
+button {
+  font-size: 32rpx;
+  color: #4FB3A4;
+  width: 360rpx;
+  height: 70rpx;
+  line-height: 70rpx;
+  background-color: #ffffff;
+  border: 1px solid #4FB3A4;
+  margin: 34rpx auto;
+  margin-top: 34rpx;
+}
+button.button-hover {
+  opacity: .8;
+  color: #4FB3A4;
+  background-color: #ffffff;
+}
+button[disabled] {
+  opacity: .4;
+  color: #4FB3A4 !important;
+}
+button[type=primary] {
+  height: 94rpx;
+  width: 670rpx;
+  font-size: 36rpx;
+  background-color: #4FB3A4;
+  line-height: 94rpx;
+  margin: 60rpx 40rpx;
+}
+button[type=primary][loading] {
+  background-color: #4FB3A4;
+}
+button[type=primary].button-hover {
+  opacity: .8;
+  background-color: #4FB3A4;
+}
+button[type=primary][disabled] {
+  background-color: #4FB3A4 !important;
+  color: #ffffff !important;
+}
+textarea {
+  height: 100%;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+page {
+  height: 100%;
+}
+.vk-app {
+  height: 100%;
+  font-size: 28rpx;
+  background-color: #EFEFEF;
+}

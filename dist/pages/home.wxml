@@ -1,0 +1,10 @@
+
+    <view class="app">
+        <view class="menus">
+            <block wx:for="{{menus}}" wx:for-index="index" wx:for-item="menu" wx:key="index">
+                <view class="menu" bindtap="pageSwitch"  wx:if="{{menu.isShow}}" data-wpypageswitch-a="{{menu.url}}">
+                    {{menu.cn}}
+                </view>
+            </block>
+        </view>
+    </view>
