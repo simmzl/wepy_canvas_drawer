@@ -18,7 +18,7 @@ import canvasdrawer from "@/components/canvasdrawer/canvasdrawer";
 注册组件：
 
 ```javascript
-export default {
+export default class Index extends wepy.page {
     components = {
         canvasdrawer
     };
