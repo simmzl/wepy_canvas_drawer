@@ -251,7 +251,7 @@ export default class Drawer extends wepy.component {
     }
     async getImageInfo(url) {
         if (this.cache[url]) {
-            return url;
+            return this.cache[url];
         } else {
             const objExp = new RegExp(/^http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/);
             if (objExp.test(url)) {
