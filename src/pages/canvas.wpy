@@ -64,9 +64,7 @@ export default class Canvas extends wepy.page {
     onLoad() {}
 }
 </script>
-<style lang="less">
-    @import "../assets/css/variable.less";
-
+<style lang="css">
     .share-image {
         display: block;
         width: 600rpx;

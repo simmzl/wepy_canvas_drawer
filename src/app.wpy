@@ -1,5 +1,5 @@
-<style lang="less" src="@/assets/css/reset.less"></style>
-<style lang="less">
+<style lang="css" src="@/assets/css/reset.css"></style>
+<style lang="css">
     page {
         height:100%
     }
@@ -13,7 +13,6 @@
 <script>
 import wepy from "wepy";
 import "wepy-async-function";
-// import config from "@/assets/js/config";
 
 export default class extends wepy.app {
     config = {

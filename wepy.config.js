@@ -21,12 +21,6 @@ const wepyConfig = {
     },
     eslint: true,
     compilers: {
-        // less: {
-        //     compress: true
-        // },
-        /* sass: {
-        outputStyle: 'compressed'
-        }, */
         babel: {
             sourceMap: true,
             presets: [
@@ -67,11 +61,6 @@ const wepyConfig = {
 switch (env) {
     case "production":
         delete wepyConfig.compilers.babel.sourcesMap;
-        // 压缩sass
-        // wepyConfig.compilers['sass'] = {outputStyle: 'compressed'}
-
-        // 压缩less
-        wepyConfig.compilers["less"] = { compress: true };
 
         // 压缩js
         wepyConfig.plugins = Object.assign(wepyConfig.plugins, {

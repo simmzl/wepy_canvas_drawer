@@ -10,12 +10,12 @@
 import wepy from "wepy";
 
 export default class Drawer extends wepy.component {
-      /**
+    /**
     * @argument
     * painting -- json数据
     * @event
     * getImage 渲染图片完成后的回调
-      **/
+    **/
     props = {
         painting: {
             type: Object,
@@ -75,7 +75,7 @@ export default class Drawer extends wepy.component {
                 this.ctx.clearActions();
                 this.ctx.save();
                 this.getImageList(views);
-                this.downLoadImages(0);
+                setTimeout(() => this.downLoadImages(0), 100);
             }
         }, 100);
     }
@@ -308,7 +308,7 @@ export default class Drawer extends wepy.component {
     }
 }
 </script>
-<style lang="less">
+<style lang="css">
     .board {
         position: fixed;
         top: 2000rpx;

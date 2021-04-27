@@ -47,9 +47,7 @@ export default class Home extends wepy.page {
     }
 }
 </script>
-<style lang="less">
-    @import "../assets/css/variable.less";
-
+<style lang="css">
     .app {
         background: #fff;
         width: 100%;
@@ -79,7 +77,7 @@ export default class Home extends wepy.page {
         border-radius: 18rpx;
         text-decoration: none;
         margin: 40rpx;
-        // box-shadow: 0 30rpx 60rpx @box-shadow;
+        // box-shadow: 0 30rpx 60rpx rgb(0, 0, 0, 0.1);
         text-align: center;
     }
 </style>
